@@ -1,0 +1,208 @@
+---
+title: "assignment1"
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
+date: "2024-06-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<!-- 
+Dataset: https://www.kaggle.com/datasets/antfarol/car-sale-advertisements
+install.packages(c("readr", "dplyr", "ggplot2")) 
+-->
+
+
+## Analysis
+
+
+* Print the structure of your dataset
+```{r}
+library(readr)
+car_ad <- read_csv("/Users/101501339/Documents/car_ad.csv")
+str(car_ad)
+```
+
+* List the variables in your dataset
+```{r}
+names(car_ad)
+```
+
+
+* Print the top 15 rows of your dataset
+```{r}
+# List the variables in the dataset
+head(car_ad, 15)
+```
+
+
+* Write a user defined function using any of the variables from the data set.
+```{r}
+# User-defined function to calculate average price
+average_price <- function(data) {
+  mean(data$price, na.rm = TRUE)
+}
+
+# Call the function
+average_price(car_ad)
+```
+
+
+* Use data manipulation techniques and filter rows based on any logical criteria that exist in your dataset.
+```{r}
+# Load dplyr library
+library(dplyr)
+
+# Filter rows where price is greater than 10000
+filtered_data <- car_ad %>%
+  filter(price > 50000)
+
+# Print the filtered data
+head(filtered_data)
+```
+
+
+* Identify the dependent & independent variables and use reshaping techniques and create a new data frame by joining those variables from your dataset.
+```{r}
+# Select dependent and independent variables
+reshaped_data <- car_ad %>%
+  select(price, car, model, year, mileage)
+
+# Print the reshaped data
+head(reshaped_data)
+```
+
+
+* Remove missing values in your dataset.
+```{r}
+# Remove missing values
+car_ad <- na.omit(car_ad)
+
+# Print the cleaned data
+head(car_ad)
+```
+
+
+* Identify and remove duplicated data in your dataset
+```{r}
+# Remove duplicated data
+car_ad <- car_ad %>%
+  distinct()
+
+# Print the unique data
+head(car_ad)
+```
+
+* Reorder multiple rows in descending order
+```{r}
+# Reorder rows in descending order by price
+car_ad <- car_ad %>%
+  arrange(desc(price), desc(year))
+
+# Print the ordered data
+head(car_ad)
+```
+
+
+
+* Rename some of the column names in your dataset
+```{r}
+# Rename columns
+car_ad <- car_ad %>%
+  rename(car_price = price, car_model = model)
+
+# Print the renamed data
+head(car_ad)
+```
+
+* Add new variables in your data frame by using a mathematical function (for e.g. – multiply an existing column by 2 and add it as a new variable to your data frame)
+```{r}
+car_ad <- car_ad %>%
+  mutate(car_price_double = car_price * 2)
+
+# Print the updated data frame
+head(car_ad)
+```
+
+* Create a training set using random number generator engine.
+```{r}
+# Create a training set
+set.seed(123)
+training_indices <- sample(1:nrow(car_ad), 0.7 * nrow(car_ad))
+car_ad <- car_ad[training_indices, ]
+
+# Print the training set
+head(car_ad)
+```
+
+* Print the summary statistics of your dataset
+```{r}
+summary(car_ad)
+```
+
+* Use any of the numerical variables from the dataset and perform the following statistical functions
+```{r}
+# Mean
+mean_price <- mean(car_ad$car_price, na.rm = TRUE)
+
+# Median
+median_price <- median(car_ad$car_price, na.rm = TRUE)
+
+# Mode
+mode_price <- as.numeric(names(sort(table(car_ad$car_price), decreasing = TRUE))[1])
+
+# Range
+range_price <- range(car_ad$car_price, na.rm = TRUE)
+
+# Print results
+mean_price
+median_price
+mode_price
+range_price
+```
+
+* Plot a scatter plot for any 2 variables in your dataset
+```{r}
+# Load ggplot2 library
+library(ggplot2)
+library(scales)
+# Scatter plot of price vs mileage
+ggplot(car_ad, aes(x = mileage, y = car_price)) +
+  geom_point() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Price vs Mileage", x = "Mileage", y = "Price")
+```
+
+* Plot a bar plot for any 2 variables in your dataset
+```{r}
+# Bar plot of average price by make
+ggplot(car_ad, aes(x = car, y = car_price)) +
+  stat_summary(fun = mean, geom = "bar") +
+  labs(title = "Average Price by Car", x = "Car", y = "Average Price") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+* Find the correlation between any 2 variables by applying Pearson correlation
+```{r}
+# Pearson correlation
+correlation <- cor(car_ad$car_price, car_ad$mileage, method="pearson")
+
+# Print correlation
+correlation
+```
+
+
+
+
+
+
+
+
+
+
